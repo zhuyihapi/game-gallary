@@ -1,0 +1,57 @@
+# Python相关
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.env
+*.venv
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+.eggs/
+*.log
+
+# FastAPI相关
+static/
+*.sqlite3
+*.db
+*.json
+*.bak
+
+# Node.js相关
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# React相关
+/build/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# IDE和编辑器相关
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# 其他
+*.log
+*.out
+*.pid
+*.gz
+*.zip
+*.tar
+*.tgz
