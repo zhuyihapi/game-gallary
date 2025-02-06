@@ -14,11 +14,12 @@ _SessionMaker = None
 
 async def initialize_mysql() -> None:
     """初始化MySQL数据库连接池"""
+    logger.debug("Initializing MySQL connection...")
     global _engine, _SessionMaker
     try:
         # aiomysql or asyncmy
-        database_url = f"mysql+asyncmy://{mysql_settings_dev.USER}:{mysql_settings_dev.PASSWORD}@{mysql_settings_dev.HOST}:{mysql_settings_dev.PORT}/{mysql_settings_dev.DATABASE}"
-
+        database_url = f"mysql+asyncmy://{mysql_settings_dev.MYSQL_USER}:{mysql_settings_dev.MYSQL_PASSWORD}@{mysql_settings_dev.MYSQL_HOST}:{mysql_settings_dev.MYSQL_PORT}/{mysql_settings_dev.MYSQL_DATABASE}"
+        # logger.debug("database_url is %s", database_url)
         _engine = create_async_engine(
             database_url,
             echo=mysql_settings_dev.ECHO,

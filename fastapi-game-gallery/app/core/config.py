@@ -1,27 +1,67 @@
-import os
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
+from pathlib import Path
 
-# 加载 .env 文件
-if not os.path.exists(".env"):
-    raise FileNotFoundError("❌ `.env` 文件不存在！请先复制 `.env.example` 并正确配置环境变量。")
-load_dotenv()
+import os
+import logging
+
+from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+from pathlib import Path
+
+
+# 项目根目录
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+env_path = BASE_DIR / ".env"
+
+if not env_path.exists():
+    raise FileNotFoundError("`.env` 文件不存在！请先创建 `.env` 并正确配置环境变量。")
+
+# 先加载 .env
+load_dotenv(dotenv_path=env_path, override=True)
+
 
 class BaseMysqlSettings(BaseSettings):
-    HOST: str = os.getenv("MYSQL_HOST")
-    PORT: int = int(os.getenv("MYSQL_PORT", 3306))
-    USER: str = os.getenv("MYSQL_USER")
-    PASSWORD: str = os.getenv("MYSQL_PASSWORD")
-    DATABASE: str = os.getenv("MYSQL_DATABASE")
+    MYSQL_HOST: str
+    MYSQL_PORT: int
+    MYSQL_USER: str
+    MYSQL_PASSWORD: str
+    MYSQL_DATABASE: str
+
+    class Config:
+        env_file = env_path  # 让 pydantic 读取 .env
+        env_file_encoding = "utf-8"
+
 
 class DevMysqlSettings(BaseMysqlSettings):
-    ECHO: bool = os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true"
-    POOL_SIZE: int = int(os.getenv("SQLALCHEMY_POOL_SIZE", 5))
-    MAX_OVERFLOW: int = int(os.getenv("SQLALCHEMY_MAX_OVERFLOW", 10))
-    FUTURE: bool = os.getenv("SQLALCHEMY_FUTURE", "True").lower() == "true"
+    ECHO: bool = True
+    POOL_SIZE: int = 5
+    MAX_OVERFLOW: int = 10
+    FUTURE: bool = True
 
 class DevSessionMaker:
     expired_on_commit: bool = True
 
+
 mysql_settings_dev = DevMysqlSettings()
 session_maker_settings_dev = DevSessionMaker()
+# print(f"MYSQL_USER from MySQLSettings: {mysql_settings_dev.MYSQL_USER}")
+# print(f"MYSQL_USER from os.getenv: {os.getenv('MYSQL_USER')}")
+
+
+# 日志配置
+# 日志目录
+LOG_DIR = BASE_DIR / "logs"
+LOG_FILE_PATH = LOG_DIR / "app.log"
+
+# 创建日志目录（如果不存在）
+if not LOG_DIR.exists():
+    LOG_DIR.mkdir(parents=True)
+
+# 日志名称
+LOG_NAME = "game-gallery"
+
+# 日志级别配置
+LOG_LEVEL = logging.DEBUG  # 可修改为 INFO, WARNING, ERROR 等
+FILE_LOG_LEVEL = logging.INFO  # 只存 INFO 及以上级别的日志
+CONSOLE_LOG_LEVEL = logging.DEBUG  # 终端输出所有日志
