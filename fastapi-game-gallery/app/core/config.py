@@ -17,8 +17,8 @@ env_path = BASE_DIR / ".env"
 if not env_path.exists():
     raise FileNotFoundError("`.env` 文件不存在！请先创建 `.env` 并正确配置环境变量。")
 
-# 先加载 .env
-load_dotenv(dotenv_path=env_path, override=True)
+
+load_dotenv(dotenv_path=env_path)
 
 
 class BaseMysqlSettings(BaseSettings):
@@ -31,6 +31,7 @@ class BaseMysqlSettings(BaseSettings):
     class Config:
         env_file = env_path  # 让 pydantic 读取 .env
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 class DevMysqlSettings(BaseMysqlSettings):
@@ -38,6 +39,7 @@ class DevMysqlSettings(BaseMysqlSettings):
     POOL_SIZE: int = 5
     MAX_OVERFLOW: int = 10
     FUTURE: bool = True
+
 
 class DevSessionMaker:
     expired_on_commit: bool = True
@@ -65,3 +67,19 @@ LOG_NAME = "game-gallery"
 LOG_LEVEL = logging.DEBUG  # 可修改为 INFO, WARNING, ERROR 等
 FILE_LOG_LEVEL = logging.INFO  # 只存 INFO 及以上级别的日志
 CONSOLE_LOG_LEVEL = logging.DEBUG  # 终端输出所有日志
+
+
+# Twitch API 认证信息
+class TwitchSettings(BaseSettings):
+    TWITCH_CLIENT_ID: str
+    TWITCH_CLIENT_SECRET: str
+    TWITCH_ACCESS_TOKEN: str
+
+    class Config:
+        env_file = env_path
+        env_file_encoding = "utf-8"
+        extra = "ignore"
+
+
+twitch_settings = TwitchSettings()
+# print(f"TWITCH_CLIENT_ID from TwitchSettings: {twitch_settings.TWITCH_CLIENT_ID}")

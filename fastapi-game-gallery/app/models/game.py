@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text
 from app.database.mysql import Base
 
+
+
 class Game(Base):
     __tablename__ = "games"
 

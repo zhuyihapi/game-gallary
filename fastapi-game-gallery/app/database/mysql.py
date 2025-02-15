@@ -36,7 +36,7 @@ async def initialize_mysql() -> None:
             # logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
             # 可选：测试连接
             await conn.execute(text("SELECT 1"))
-        logger.info(f"MySQL connection initialized at {database_url}.")
+        logger.info(f"MySQL connection initialized at {mysql_settings_dev.MYSQL_HOST}.")
     except SQLAlchemyError as e:
         logger.error(f"Failed to initialize MySQL: {e}")
         raise
