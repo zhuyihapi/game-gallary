@@ -1,10 +1,9 @@
 from re import A
 import requests
-import datetime
-import time
 import requests
-
+from typing import Optional
 from app.core.config import twitch_settings
+from app.log.logger import logger
 
 TWITCH_ACCESS_TOKEN = twitch_settings.TWITCH_ACCESS_TOKEN
 TWITCH_CLIENT_ID = twitch_settings.TWITCH_CLIENT_ID
@@ -12,21 +11,21 @@ TWITCH_CLIENT_SECRET = twitch_settings.TWITCH_CLIENT_SECRET
 
 
 # 检查 Access Token 是否有效
-def is_access_token_valid(access_token):
+def is_access_token_valid(access_token: str) -> bool:
     url = "https://id.twitch.tv/oauth2/validate"
     headers = {"Authorization": f"Bearer {access_token}"}
 
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        print("-Access Token 有效")
+        logger.debug("TWITCH_ACCESS_TOKEN valid")
         return True
     else:
-        print("-Access Token 失效，需要重新获取")
+        logger.debug("TWITCH_ACCESS_TOKEN invalid, need to get a new one")
         return False
 
 
 # 获取新的 Access Token
-def get_new_access_token(client_id, client_secret):
+def get_new_access_token(client_id: str, client_secret: str) -> Optional[str]:
     url = "https://id.twitch.tv/oauth2/token"
     params = {
         "client_id": client_id,
@@ -38,15 +37,15 @@ def get_new_access_token(client_id, client_secret):
 
     new_token = response_data.get("access_token")
     if new_token:
-        print(f"获取新的 Access Token: {new_token}")
+        print(f"get a new Access Token: {new_token}")
     else:
-        print(f"无法获取 Access Token, 错误信息: {response_data}")
+        print(f"fail to get a new token, find error message: {response_data}")
 
     return new_token
 
 
 # 检查 Token 并获取有效 Token
-def check_or_get_access_token():
+def check_or_get_access_token() -> str:
     global TWITCH_ACCESS_TOKEN
     if not is_access_token_valid(
         TWITCH_ACCESS_TOKEN
