@@ -2,7 +2,8 @@ import requests
 import json
 
 # 目标游戏的 Steam App ID
-APP_ID = "2246340"
+# APP_ID = "2246340" # Monster Hunter Wilds
+APP_ID = "3065170" # Monster Hunter Wilds Beta test
 
 # Steam Store API 查询 URL
 URL = f"https://store.steampowered.com/api/appdetails?appids={APP_ID}&cc=cn&l=schinese"
