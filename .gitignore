@@ -14,7 +14,7 @@ dist/
 *.egg-info/
 .eggs/
 *.log
-
+logs/
 # FastAPI相关
 static/
 *.sqlite3

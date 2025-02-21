@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from app.routers import game_router
 from contextlib import asynccontextmanager
+from starlette.responses import JSONResponse
 
 from app.database.mysql import initialize_mysql, close_mysql
 
@@ -14,6 +15,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(game_router.router)
+
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500, content={"code": 500, "message": f"internel error: {str(exc)}"}
+    )
+
 
 if __name__ == "__main__":
     import uvicorn
