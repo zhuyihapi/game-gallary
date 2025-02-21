@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.core.config import mysql_settings_dev, session_maker_settings_dev
-from app.log.logger import logger
+from app.config import mysql_settings_dev, session_maker_settings_dev
+from app.logger import logger
 
 
 _engine = None

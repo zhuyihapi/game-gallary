@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 # 项目根目录
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 env_path = BASE_DIR / ".env"
 
 if not env_path.exists():
@@ -47,8 +47,8 @@ class DevSessionMaker:
 
 mysql_settings_dev = DevMysqlSettings()
 session_maker_settings_dev = DevSessionMaker()
-# print(f"MYSQL_USER from MySQLSettings: {mysql_settings_dev.MYSQL_USER}")
-# print(f"MYSQL_USER from os.getenv: {os.getenv('MYSQL_USER')}")
+print(f"MYSQL_USER from MySQLSettings: {mysql_settings_dev.MYSQL_HOST}")
+# print(f"MYSQL_USER from os.getenv: {os.getenv('MYSQL_HOST')}")
 
 
 # 日志配置
@@ -70,16 +70,16 @@ CONSOLE_LOG_LEVEL = logging.DEBUG  # 终端输出所有日志
 
 
 # Twitch API 认证信息
-class TwitchSettings(BaseSettings):
-    TWITCH_CLIENT_ID: str
-    TWITCH_CLIENT_SECRET: str
-    TWITCH_ACCESS_TOKEN: str
+# class TwitchSettings(BaseSettings):
+#     TWITCH_CLIENT_ID: str
+#     TWITCH_CLIENT_SECRET: str
+#     TWITCH_ACCESS_TOKEN: str
 
-    class Config:
-        env_file = env_path
-        env_file_encoding = "utf-8"
-        extra = "ignore"
+#     class Config:
+#         env_file = env_path
+#         env_file_encoding = "utf-8"
+#         extra = "ignore"
 
 
-twitch_settings = TwitchSettings()
+# twitch_settings = TwitchSettings()
 # print(f"TWITCH_CLIENT_ID from TwitchSettings: {twitch_settings.TWITCH_CLIENT_ID}")

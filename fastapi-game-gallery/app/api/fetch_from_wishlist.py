@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 import pandas as pd
 
-from app.log.logger import logger
+from app.logger import logger
 
 
 def parse_popular_wishlist():

@@ -2,8 +2,8 @@ from re import A
 import requests
 import requests
 from typing import Optional
-from app.core.config import twitch_settings
-from app.log.logger import logger
+from app.config import twitch_settings
+from app.logger import logger
 
 TWITCH_ACCESS_TOKEN = twitch_settings.TWITCH_ACCESS_TOKEN
 TWITCH_CLIENT_ID = twitch_settings.TWITCH_CLIENT_ID

@@ -1,5 +1,5 @@
 from logging.handlers import TimedRotatingFileHandler, RotatingFileHandler
-from app.core.config import (
+from app.config import (
     LOG_FILE_PATH,
     LOG_LEVEL,
     FILE_LOG_LEVEL,

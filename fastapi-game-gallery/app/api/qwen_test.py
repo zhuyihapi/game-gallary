@@ -1,5 +1,3 @@
-from email import message
-import os
 from openai import OpenAI
 from datetime import datetime
 from pprint import pprint

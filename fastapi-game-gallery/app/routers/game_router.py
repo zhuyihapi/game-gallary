@@ -3,23 +3,29 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 from app.schemas.game import Game
-
+from app.schemas.request import DateRequest
+from app.service.temp import get_data_by_year_months
 
 router = APIRouter()
 
-# Sample data
-games = [
-    Game(id=1, title="Game One", release_date="2023-01-01", platforms=["PC", "PS5"], genres=["Action"], image_url="http://example.com/game1.jpg", anticipation_rating=8, description="An exciting action game."),
-    Game(id=2, title="Game Two", release_date="2023-02-01", platforms=["Xbox", "PC"], genres=["Adventure"], image_url="http://example.com/game2.jpg", anticipation_rating=9, description="An adventurous journey."),
-]
+@router.post("/get-by-dates")
+async def get_data_by_dates(request: DateRequest):
+    """
+    根据多个年月获取数据
+    Args:
+        request: 包含年月列表的请求体
+    Returns:
+        dict: 服务层返回的数据
+    Raises:
+        HTTPException: 如果请求参数无效或服务层出错
+    """
 
-@router.get("/games", response_model=List[Game])
-def get_games():
-    return games
-
-@router.get("/games/{game_id}", response_model=Game)
-def get_game(game_id: int):
-    for game in games:
-        if game.id == game_id:
-            return game
-    return {"error": "Game not found"}
+    DateRequest.validate_date_format({"year_months": request.year_months})
+    
+    result = await get_data_by_year_months(request.year_months)
+    
+    return {
+        "status": "success",
+        "data": result,
+        "requested_dates": request.year_months
+    }
