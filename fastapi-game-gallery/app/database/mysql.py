@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.declarative import declarative_base
 
 from app.config import mysql_settings_dev, session_maker_settings_dev
 from app.logger import logger

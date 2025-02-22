@@ -1,10 +1,9 @@
 import datetime
 from sqlalchemy import text, MetaData, Connection, Engine
-from sqlalchemy.ext.declarative import DeclarativeMeta
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.logger import logger
-from app.database.game_model import Base
+
 
 def check_and_update_table(conn: Connection, _engine: Engine) -> None:
     """Check if the `game_release` table structure matches, archive the old table and recreate if not"""
@@ -20,8 +19,13 @@ def check_and_update_table(conn: Connection, _engine: Engine) -> None:
             existing_table = metadata.tables["game_release"]
 
             expected_columns = {
-                "id", "steam_id", "name", "release_date", "release_year",
-                "release_quarter", "release_status"
+                "id",
+                "steam_id",
+                "name",
+                "release_date",
+                "release_year",
+                "release_quarter",
+                "release_status",
             }
             existing_columns = {col.name for col in existing_table.columns}
 
@@ -31,7 +35,9 @@ def check_and_update_table(conn: Connection, _engine: Engine) -> None:
                 )
                 archive_and_recreate_table(conn, _engine)
             else:
-                logger.info("`game_release` table structure is correct, no update needed.")
+                logger.info(
+                    "`game_release` table structure is correct, no update needed."
+                )
     except SQLAlchemyError as e:
         logger.error(f"Database error while checking `game_release` table: {e}")
         raise
@@ -39,13 +45,16 @@ def check_and_update_table(conn: Connection, _engine: Engine) -> None:
         logger.error(f"Unexpected error while checking `game_release` table: {e}")
         raise
 
+
 def create_game_release_table(_engine: Engine) -> None:
     """Create only the `game_release` table"""
     try:
         from app.database.game_model import GameRelease
-        
+
         logger.info(f"Ensuring table `game_release` is created...")
-        GameRelease.__table__.create(bind=_engine, checkfirst=True)  # 目前仅创建 `game_release`
+        GameRelease.__table__.create(
+            bind=_engine, checkfirst=True
+        )  # 目前仅创建 `game_release`
         logger.info("`game_release` table has been successfully created.")
     except SQLAlchemyError as e:
         logger.error(f"Database error while creating `game_release` table: {e}")
@@ -53,6 +62,7 @@ def create_game_release_table(_engine: Engine) -> None:
     except Exception as e:
         logger.error(f"Unexpected error while creating `game_release` table: {e}")
         raise
+
 
 def archive_and_recreate_table(conn: Connection, _engine: Engine) -> None:
     """Archive the `game_release` table and recreate it"""
@@ -68,8 +78,12 @@ def archive_and_recreate_table(conn: Connection, _engine: Engine) -> None:
         # Recreate the new table
         create_game_release_table(_engine)
     except SQLAlchemyError as e:
-        logger.error(f"Database error while archiving and recreating `game_release` table: {e}")
+        logger.error(
+            f"Database error while archiving and recreating `game_release` table: {e}"
+        )
         raise
     except Exception as e:
-        logger.error(f"Unexpected error while archiving and recreating `game_release` table: {e}")
+        logger.error(
+            f"Unexpected error while archiving and recreating `game_release` table: {e}"
+        )
         raise
