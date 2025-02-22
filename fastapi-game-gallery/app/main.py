@@ -8,9 +8,9 @@ from app.database.mysql import initialize_mysql, close_mysql
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await initialize_mysql()
+    initialize_mysql()
     yield
-    await close_mysql()
+    close_mysql()
 
 
 app = FastAPI(lifespan=lifespan)
