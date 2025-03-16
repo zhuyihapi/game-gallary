@@ -44,7 +44,15 @@ class DevMysqlSettings(BaseMysqlSettings):
 class DevSessionMaker:
     expired_on_commit: bool = True
 
+# class BaseSqliteSettings(BaseSettings):
+#     SQLITE_DB_PATH: str
 
+#     class Config:
+#         env_file = env_path
+#         env_file_encoding = "utf-8"
+#         extra = "ignore"
+
+# sqlite_settings_dev = BaseSqliteSettings()
 mysql_settings_dev = DevMysqlSettings()
 session_maker_settings_dev = DevSessionMaker()
 print(f"MYSQL_USER from MySQLSettings: {mysql_settings_dev.MYSQL_HOST}")
