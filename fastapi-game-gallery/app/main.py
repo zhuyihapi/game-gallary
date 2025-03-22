@@ -4,12 +4,15 @@ from contextlib import asynccontextmanager
 from starlette.responses import JSONResponse
 
 from app.database.mysql import initialize_mysql, close_mysql
+from app.scheduler import start_scheduler, shutdown_scheduler
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     initialize_mysql()
+    start_scheduler()
     yield
+    shutdown_scheduler()
     close_mysql()
 
 

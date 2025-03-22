@@ -11,8 +11,8 @@ from pathlib import Path
 
 
 # 项目根目录
-BASE_DIR = Path(__file__).resolve().parent.parent
-env_path = BASE_DIR / ".env"
+ROOT_DIR = Path(__file__).resolve().parent.parent
+env_path = ROOT_DIR / ".env"
 
 if not env_path.exists():
     raise FileNotFoundError("`.env` 文件不存在！请先创建 `.env` 并正确配置环境变量。")
@@ -61,7 +61,7 @@ print(f"MYSQL_USER from MySQLSettings: {mysql_settings_dev.MYSQL_HOST}")
 
 # 日志配置
 # 日志目录
-LOG_DIR = BASE_DIR / "logs"
+LOG_DIR = ROOT_DIR / "logs"
 LOG_FILE_PATH = LOG_DIR / "app.log"
 
 # 创建日志目录（如果不存在）

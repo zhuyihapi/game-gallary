@@ -6,9 +6,8 @@ from datetime import datetime
 class DateRequest(BaseModel):
     year_months: List[str]  # 期望格式如: ["2023-01", "2024-02"]
 
-    # 添加验证
     class Config:
-        schema_extra = {"example": {"year_months": ["2023-01", "2023-02", "2024-01"]}}
+        json_schema_extra = {"example": {"year_months": ["2023-01", "2023-02", "2024-01"]}}
 
     @classmethod
     def validate_date_format(cls, values):

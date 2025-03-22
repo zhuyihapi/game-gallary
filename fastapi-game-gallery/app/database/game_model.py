@@ -39,7 +39,7 @@ class GameRelease(Base):
             "(release_date IS NOT NULL AND release_year IS NULL AND release_quarter IS NULL) "
             "OR (release_quarter IS NOT NULL AND release_year IS NOT NULL AND release_date IS NULL) "
             "OR (release_year IS NOT NULL AND release_date IS NULL)",
-            name="release_date_constraints"
+            name="release_date_constraints",
         ),
     )
 
