@@ -1,4 +1,6 @@
 from logging.handlers import TimedRotatingFileHandler, RotatingFileHandler
+from loguru import logger
+
 from app.config import (
     LOG_FILE_PATH,
     LOG_LEVEL,
@@ -9,8 +11,6 @@ from app.config import (
 
 import logging
 import colorlog
-import sys
-import os
 
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
