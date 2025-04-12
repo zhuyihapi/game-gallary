@@ -32,7 +32,7 @@ def update_steam_cache():
 
 
 def update_popular_wishlist(session: Session = Depends(get_mysql_session)):
-    logger.info(f"[{datetime.now()}] 开始更新 popular_wishlist 数据...")
+    logger.info(f"开始更新 popular_wishlist 数据...")
     try:
         file1 = get_popular_wishlist(0, 50)
         time.sleep(5)
@@ -53,7 +53,7 @@ def update_popular_wishlist(session: Session = Depends(get_mysql_session)):
         )
     except Exception as e:
         session.rollback()
-        logger.error(f"[{datetime.now()}] 更新 popular_wishlist 数据失败: {e}")
+        logger.error(f"更新 popular_wishlist 数据失败: {e}")
 
 
 def update_popular_wishlist_wrapper():
@@ -77,7 +77,7 @@ def start_scheduler():
     )
 
     # 每周一凌晨3:05触发更新 popular_wishlist 数据任务
-    wishlist_trigger = CronTrigger(day_of_week="tue", hour=3, minute=5)
+    wishlist_trigger = CronTrigger(day_of_week="tue", hour=3, minute=10)
     scheduler.add_job(
         update_popular_wishlist_wrapper,
         wishlist_trigger,

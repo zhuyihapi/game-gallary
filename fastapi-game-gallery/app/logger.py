@@ -1,63 +1,68 @@
-from logging.handlers import TimedRotatingFileHandler, RotatingFileHandler
-from loguru import logger
-
 from app.config import (
     LOG_FILE_PATH,
     LOG_LEVEL,
     FILE_LOG_LEVEL,
     CONSOLE_LOG_LEVEL,
     LOG_NAME,
+    ROOT_DIR
+)
+from loguru import logger
+from pathlib import Path
+import sys
+import os
+
+
+Path(LOG_FILE_PATH).parent.mkdir(parents=True, exist_ok=True)
+
+logger.remove()
+
+def format_record(record):
+    level = record["level"].name
+
+    # 定义颜色/样式嵌套的 map
+    style_map = {
+        "DEBUG": lambda text: f"<cyan>{text}</cyan>",
+        "INFO": lambda text: f"<green>{text}</green>",
+        "WARNING": lambda text: f"<yellow>{text}</yellow>",
+        "ERROR": lambda text: f"<red>{text}</red>",
+        "CRITICAL": lambda text: f"<red><bold><reverse>{text}</reverse></bold></red>",
+    }
+
+    style = style_map.get(level, lambda text: text)
+
+    return (
+        f"{record['time']:YYYY-MM-DD HH:mm:ss} - "
+        f"{record['name']} - "
+        f"{style(f'{level:<8}')} - "
+        f"{record['message']}"
+    )
+
+# logger.level("DEBUG", color="<cyan>")
+# logger.level("INFO", color="<green>")
+# logger.level("WARNING", color="<yellow>")
+# logger.level("ERROR", color="<red><bold>")
+# logger.level("CRITICAL", color="<red><bold><reverse>")
+
+logger.add(
+    sys.stdout,
+    level=CONSOLE_LOG_LEVEL,
+    # format=format_record,
+    enqueue=True,
+    backtrace=True,
+    diagnose=True,
 )
 
-import logging
-import colorlog
-
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# 定义颜色格式化器
-color_formatter = colorlog.ColoredFormatter(
-    "%(asctime)s - %(name)s - %(log_color)s%(levelname)s%(reset)s - %(message)s",
-    log_colors={
-        "DEBUG": "cyan",
-        "INFO": "green",
-        "WARNING": "yellow",
-        "ERROR": "red",
-        "CRITICAL": "bold_red",
-    },
-    reset=True,
+logger.add(
+    LOG_FILE_PATH,
+    level=FILE_LOG_LEVEL,
+    format="{time:YYYY-MM-DD HH:mm:ss} - {name} - {level} - {message}",
+    rotation="10 MB",
+    retention=20,
+    encoding="utf-8",
+    enqueue=True,
 )
 
-# 普通文件日志格式
-file_formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-
-# 创建文件日志处理器（按日期切分日志文件）
-# file_handler = TimedRotatingFileHandler(
-#     filename=str(LOG_FILE_PATH), when="midnight", interval=1, backupCount=7, encoding="utf-8"
-# )
-file_handler = RotatingFileHandler(
-    filename=str(LOG_FILE_PATH), maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8"
-)
-file_handler.setFormatter(file_formatter)
-file_handler.setLevel(FILE_LOG_LEVEL)
-
-# 创建控制台日志处理器
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(color_formatter)
-console_handler.setLevel(CONSOLE_LOG_LEVEL)
-
-# 创建全局日志记录器
-logger = logging.getLogger(LOG_NAME)
-logger.setLevel(LOG_LEVEL)
-
-# 防止重复添加处理器
-if not logger.hasHandlers():
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-
-
-# 测试日志
+# 示例：loguru 不再需要 logger = logging.getLogger()，直接使用 logger 即可
 if __name__ == "__main__":
     logger.debug("This is a DEBUG log")
     logger.info("This is an INFO log")

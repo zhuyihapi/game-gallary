@@ -47,30 +47,30 @@ def get_popular_wishlist(start, count) -> str:
     return filename
 
 
-def parse_popular_wishlist(file_path):
+def parse_popular_wishlist(cache_name: str = None) -> pd.DataFrame:
     """
-    Parses the 'popularwishlist.html' file and extracts game information.
+    Parses the 'popularwishlist.html' or 'steam_page_*_*.html' file and extracts game information.
 
     Returns:
         pd.DataFrame: A DataFrame containing game ID, name, and release date.
     """
     try:
         # Determine the file path
-        if not file_path:
-            file_path = CACHE_DIR / "popularwishlist.html"
+        if not cache_name:
             logger.debug(
-                f"Attempting to get popular-wishlist HTML file path: {file_path}"
+                f"cache_name is empty!"
             )
+            raise ValueError("cache_name must be provided")
 
         # Read the file
-        file_path = Path(file_path)
-        if not file_path.exists():
-            logger.error(f"File not found: {file_path}")
+        cache_path = CACHE_DIR / Path(cache_name)
+        if not cache_path.exists():
+            logger.error(f"File not found: {cache_path}")
             return pd.DataFrame(
                 columns=["ID", "Game", "Release Date"]
             )  # Return empty DataFrame
 
-        with open(file_path, "r", encoding="utf-8") as file:
+        with open(cache_path, "r", encoding="utf-8") as file:
             content = file.read()
 
         # Parse the HTML content
