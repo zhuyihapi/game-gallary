@@ -5,10 +5,6 @@ from pathlib import Path
 import os
 import logging
 
-from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
-from pathlib import Path
-
 
 # 项目根目录
 ROOT_DIR = Path(__file__).resolve().parent.parent

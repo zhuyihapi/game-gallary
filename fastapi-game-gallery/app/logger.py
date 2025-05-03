@@ -1,16 +1,6 @@
-from app.config import (
-    LOG_DIR,
-    LOG_LEVEL,
-    FILE_LOG_LEVEL,
-    CONSOLE_LOG_LEVEL,
-    LOG_NAME,
-    ROOT_DIR,
-)
-from datetime import datetime
 from loguru import logger
 from pathlib import Path
 import sys
-import os
 
 
 # LOG_DIR.parent.mkdir(parents=True, exist_ok=True)
