@@ -1,9 +1,10 @@
 from bs4 import BeautifulSoup
 from pathlib import Path
+from loguru import logger
 import pandas as pd
 import requests
 
-from app.logger import logger
+
 from app.config import ROOT_DIR
 
 CACHE_DIR = ROOT_DIR / "app" / ".cache"
@@ -57,9 +58,7 @@ def parse_popular_wishlist(cache_name: str = None) -> pd.DataFrame:
     try:
         # Determine the file path
         if not cache_name:
-            logger.debug(
-                f"cache_name is empty!"
-            )
+            logger.debug(f"cache_name is empty!")
             raise ValueError("cache_name must be provided")
 
         # Read the file

@@ -1,6 +1,8 @@
 from typing import List
+from loguru import logger
+
 from app.schemas.game import Game
-from app.logger import logger
+
 
 async def get_data_by_year_months(year_months: List[str]) -> List[Game]:
     """

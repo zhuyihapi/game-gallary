@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+from loguru import logger
 
 from app.config import mysql_settings_dev, session_maker_settings_dev
-from app.logger import logger
 from app.database.mysql_tables_init import check_and_update_table
 
 _engine = None

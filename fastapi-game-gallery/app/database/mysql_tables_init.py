@@ -1,8 +1,7 @@
 import datetime
 from sqlalchemy import text, MetaData, Connection, Engine
 from sqlalchemy.exc import SQLAlchemyError
-
-from app.logger import logger
+from loguru import logger
 
 
 def check_and_update_table(conn: Connection, _engine: Engine) -> None:

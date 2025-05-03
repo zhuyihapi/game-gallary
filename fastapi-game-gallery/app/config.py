@@ -62,19 +62,14 @@ print(f"MYSQL_USER from MySQLSettings: {mysql_settings_dev.MYSQL_HOST}")
 # 日志配置
 # 日志目录
 LOG_DIR = ROOT_DIR / "logs"
-LOG_FILE_PATH = LOG_DIR / "app.log"
 
 # 创建日志目录（如果不存在）
 if not LOG_DIR.exists():
     LOG_DIR.mkdir(parents=True)
 
-# 日志名称
-LOG_NAME = "game-gallery"
+# 模块名称
+MODULE_NAME = "game-gallery"
 
-# 日志级别配置
-LOG_LEVEL = logging.DEBUG  # 可修改为 INFO, WARNING, ERROR 等
-FILE_LOG_LEVEL = logging.INFO  # 只存 INFO 及以上级别的日志
-CONSOLE_LOG_LEVEL = logging.DEBUG  # 终端输出所有日志
 
 
 # Twitch API 认证信息

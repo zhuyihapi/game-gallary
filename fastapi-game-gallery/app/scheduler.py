@@ -4,12 +4,12 @@ from apscheduler.triggers.cron import CronTrigger
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from datetime import datetime
+from loguru import logger
 import time
 import aiohttp
 import pandas as pd
 
 from app.api.steam_store_match import fetch_steam_app_list
-from app.logger import logger
 from app.database.mysql import get_mysql_session
 from app.api.fetch_from_wishlist import (
     temp_save_to_mysql,
