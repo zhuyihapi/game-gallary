@@ -21,10 +21,9 @@ async def lifespan(app: FastAPI):
         retention=30,
     )
     initialize_mysql()
-    start_scheduler()
-
+    await start_scheduler()
     yield
-    shutdown_scheduler()
+    await shutdown_scheduler()
     close_mysql()
 
 

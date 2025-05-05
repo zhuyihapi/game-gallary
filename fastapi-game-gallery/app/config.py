@@ -2,9 +2,6 @@ from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 from pathlib import Path
 
-import os
-import logging
-
 
 # 项目根目录
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -16,6 +13,13 @@ if not env_path.exists():
 
 load_dotenv(dotenv_path=env_path)
 
+class APIKeys(BaseSettings):
+    ADMIN_API_KEY: str
+
+    class Config:
+        env_file = env_path
+        env_file_encoding = "utf-8"
+        extra = "ignore"
 
 class BaseMysqlSettings(BaseSettings):
     MYSQL_HOST: str
@@ -40,6 +44,7 @@ class DevMysqlSettings(BaseMysqlSettings):
 class DevSessionMaker:
     expired_on_commit: bool = True
 
+
 # class BaseSqliteSettings(BaseSettings):
 #     SQLITE_DB_PATH: str
 
@@ -51,7 +56,8 @@ class DevSessionMaker:
 # sqlite_settings_dev = BaseSqliteSettings()
 mysql_settings_dev = DevMysqlSettings()
 session_maker_settings_dev = DevSessionMaker()
-print(f"MYSQL_USER from MySQLSettings: {mysql_settings_dev.MYSQL_HOST}")
+api_keys = APIKeys()
+# print(f"MYSQL_USER from MySQLSettings: {mysql_settings_dev.MYSQL_HOST}")
 # print(f"MYSQL_USER from os.getenv: {os.getenv('MYSQL_HOST')}")
 
 
@@ -65,7 +71,6 @@ if not LOG_DIR.exists():
 
 # 模块名称
 MODULE_NAME = "game-gallery"
-
 
 
 # Twitch API 认证信息
