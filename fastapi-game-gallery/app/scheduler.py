@@ -30,28 +30,26 @@ async def update_steam_cache():
         logger.info(f"Steam App 缓存更新失败")
 
 
-async def update_popular_wishlist(session: Session = Depends(get_mysql_session)):
+async def update_popular_wishlist(session: Session = Depends(get_mysql_session)) -> int:
     logger.info(f"开始更新 popular_wishlist 数据...")
     try:
-        file1 =await get_popular_wishlist(0, 50)
+        file1_name = await get_popular_wishlist(0, 50)
         time.sleep(5)
-        file2 =await get_popular_wishlist(50, 50)
+        file2_name = await get_popular_wishlist(50, 50)
 
-        df1_task = asyncio.to_thread(parse_popular_wishlist, file1)
-        df2_task = asyncio.to_thread(parse_popular_wishlist, file2)
+        df1_task = asyncio.to_thread(parse_popular_wishlist, file1_name)
+        df2_task = asyncio.to_thread(parse_popular_wishlist, file2_name)
         df1, df2 = await asyncio.gather(df1_task, df2_task)
-        
+
         df = await asyncio.to_thread(pd.concat, [df1, df2], {"ignore_index": True})
 
         if df.empty:
             logger.warning("解析结果为空，未获取到任何热门愿望单数据。")
-            return
+            return len(df)
 
         await asyncio.to_thread(temp_save_to_mysql, df, session)
         await asyncio.to_thread(session.commit)
-        logger.info(
-            f"popular_wishlist 数据更新完成，共保存 {len(df)} 条记录。"
-        )
+        logger.info(f"popular_wishlist 数据更新完成，共保存 {len(df)} 条记录。")
     except Exception as e:
         await asyncio.to_thread(session.rollback)
         logger.error(f"更新 popular_wishlist 数据失败: {e}")

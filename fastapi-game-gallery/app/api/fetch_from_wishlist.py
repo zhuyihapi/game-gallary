@@ -48,7 +48,9 @@ def get_popular_wishlist(start, count) -> str:
     return filename
 
 
-def parse_popular_wishlist(cache_name: str = None) -> pd.DataFrame:
+def parse_popular_wishlist(
+    cache_name: str = None, test_cache_path: str = None
+) -> pd.DataFrame:
     """
     Parses the 'popularwishlist.html' or 'steam_page_*_*.html' file and extracts game information.
 
@@ -57,12 +59,15 @@ def parse_popular_wishlist(cache_name: str = None) -> pd.DataFrame:
     """
     try:
         # Determine the file path
-        if not cache_name:
+        if not cache_name and not test_cache_path:
             logger.debug(f"cache_name is empty!")
             raise ValueError("cache_name must be provided")
 
         # Read the file
-        cache_path = CACHE_DIR / Path(cache_name)
+        if test_cache_path:
+            cache_path= Path(test_cache_path)
+        else:
+            cache_path = CACHE_DIR / Path(cache_name)
         if not cache_path.exists():
             logger.error(f"File not found: {cache_path}")
             return pd.DataFrame(
@@ -118,5 +123,5 @@ def parse_popular_wishlist(cache_name: str = None) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    df = parse_popular_wishlist()
+    df = parse_popular_wishlist(test_cache_path="/home/ubuntu/projects/game-gallary/fastapi-game-gallery/app/.cache/steam_page_0_50.html")
     print(df)
