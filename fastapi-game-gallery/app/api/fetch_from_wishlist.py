@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 from loguru import logger
 import pandas as pd
-import requests
 import aiohttp
 import aiofiles
 
@@ -60,7 +59,7 @@ async def get_popular_wishlist(start: int, count: int) -> str | None:
 
 
 def parse_popular_wishlist(
-    cache_name: str = None, test_cache_path: str = None
+    cache_name: str = "", test_cache_path: str = ""
 ) -> pd.DataFrame:
     """
     Parses the 'popularwishlist.html' or 'steam_page_*_*.html' file and extracts game information.
