@@ -3,6 +3,8 @@ from pathlib import Path
 from loguru import logger
 import pandas as pd
 import requests
+import aiohttp
+import aiofiles
 
 
 from app.config import ROOT_DIR
@@ -27,24 +29,33 @@ def temp_save_to_mysql(df, session):
         logger.exception(f"数据写入 MySQL 失败: {e}")
 
 
-def get_popular_wishlist(start, count) -> str:
+async def get_popular_wishlist(start: int, count: int) -> str | None:
     """
-    获取指定起始位置和条数的Steam搜索结果，并将页面保存到本地。
-    注意：这里保存的文件名为 steam_page_{start}_{start+count}.html，
-    如果希望parse时读取固定名称的文件，请自行调整保存路径或文件名。
+    异步获取指定起始位置和条数的 Steam 搜索结果，
+    并将页面保存到本地。
+    保存文件名：steam_page_{start}_{start+count}.html
     """
-    url = f"https://store.steampowered.com/search/?filter=popularwishlist&start={start}&count={count}"
-    response = requests.get(url)
-    if response.status_code != 200:
-        logger.error(f"请求失败，状态码：{response.status_code}")
-        return None
+    url = (
+        "https://store.steampowered.com/search/"
+        f"?filter=popularwishlist&start={start}&count={count}"
+    )
 
-    # 保存页面到当前目录，你也可以指定其它目录（例如resource目录）
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status != 200:
+                logger.error(f"请求失败，状态码：{resp.status}")
+                return None
+            text = await resp.text()
+
     filename = f"steam_page_{start}_{start+count}.html"
-    with open(CACHE_DIR / filename, "w", encoding="utf-8") as f:
-        f.write(response.text)
-    logger.info(f"popular wishlist saved to {filename}")
+    target = CACHE_DIR / filename
+    target.parent.mkdir(parents=True, exist_ok=True)
 
+    async with aiofiles.open(target, mode="w", encoding="utf-8") as f:
+        await f.write(text)
+
+    logger.info(f"popular wishlist saved to {filename}")
+    
     return filename
 
 

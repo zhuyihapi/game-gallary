@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from starlette.responses import JSONResponse
-from app.routers import game_router
+from app.routers import game_router, manager_router
 from app.database.mysql import initialize_mysql, close_mysql
 from app.scheduler import start_scheduler, shutdown_scheduler
 from app.logger import init_logger
@@ -29,6 +29,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(game_router.router)
+app.include_router(manager_router.router)
 
 
 @app.exception_handler(Exception)

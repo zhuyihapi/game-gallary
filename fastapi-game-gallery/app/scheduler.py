@@ -33,9 +33,9 @@ async def update_steam_cache():
 async def update_popular_wishlist(session: Session = Depends(get_mysql_session)) -> int:
     logger.info(f"开始更新 popular_wishlist 数据...")
     try:
-        file1_name = await get_popular_wishlist(0, 50)
-        time.sleep(5)
-        file2_name = await get_popular_wishlist(50, 50)
+        file1_coro = await get_popular_wishlist(0, 50)
+        file2_coro = await get_popular_wishlist(50, 50)
+        file1_name, file2_name = await asyncio.gather(file1_coro, file2_coro)
 
         df1_task = asyncio.to_thread(parse_popular_wishlist, file1_name)
         df2_task = asyncio.to_thread(parse_popular_wishlist, file2_name)
